@@ -102,6 +102,7 @@ function FormSignIn() {
       {/* sign in with google end */}
       {/* link start */}
       <div className="flex justify-center">
+        <link to="/register" className="text-primary text-sm font-bold"/>
         <a className="mt-6 text-primary text-sm font-bold">Create an account</a>
       </div>
       {/* link end */}

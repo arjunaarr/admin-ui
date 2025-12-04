@@ -115,13 +115,9 @@ function FormSignUp() {
       </div>
       {/* sign up with google end */}
       {/* link start */}
-      <div className="flex justify-center">
-        <p className="mt-6 text-sm text-gray-03">
-          Already have an account?{" "}
-          <a href="#" className="text-primary font-bold">
-            Sign in here
-          </a>
-        </p>
+      <div className="flex justify-center text-sm mt text-gray-01">
+          Already have an account?&nbsp;
+          <link to="/register" className="text-primary text-sm font-bold"/>
       </div>
       {/* link end */}
     </>
