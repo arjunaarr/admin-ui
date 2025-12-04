@@ -10,17 +10,12 @@ const PostCard = ({ id, userId, title, body }) => {
 
   return (
     <div className="flex flex-col w-full p-6 rounded-lg border-2 border-gray-200 bg-white transition-all duration-300 hover:shadow-2xl hover:scale-105 hover:border-black hover:bg-rose-50">
-      {/* Judul Post */}
       <h3 className="text-sm font-bold text-gray-800 mb-3 line-clamp-2 h-10">
         {title}
       </h3>
-
-      {/* Isi Post */}
       <p className="text-xs text-gray-600 mb-4 flex-grow line-clamp-4 h-16">
         {body}
       </p>
-
-      {/* Tombol */}
       <button
         onClick={handleButtonClick}
         className={`w-full py-2 px-4 rounded-md font-semibold text-xs transition-all duration-300 ${
