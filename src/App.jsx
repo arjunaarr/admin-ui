@@ -3,13 +3,14 @@ import SignInPage from "./pages/signIn";
 import SignUpPage from "./pages/signUp";
 import ErrorPage from "./pages/error";
 import DashboardPage from "./pages/dashboard";
+import BalancePage from "./pages/balance";
 import { createBrowserRouter, Link, RouterProvider } from "react-router-dom";
 
 function App() {
   const myRouter = createBrowserRouter([
     {
       path: "/",
-      element: <DashboardPage/>,
+      element: <DashboardPage />,
       errorElement: <ErrorPage />,
     },
     {
@@ -19,6 +20,10 @@ function App() {
     {
       path: "/register",
       element: <SignUpPage />,
+    },
+    {
+      path: "/balance",
+      element: <BalancePage />,
     },
   ]);
 
