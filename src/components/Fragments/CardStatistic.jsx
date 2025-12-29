@@ -1,20 +1,9 @@
 import React from "react";
 import Card from "../Elements/Card";
-import BarsDataset from "../Elements/BardData";
-import { expensesStatistics } from "../../data";
+import BarsDataset from "../Elements/BarsDataset";
 
 function CardStatistic(props) {
   const { data } = props;
-
-  const dataset =
-    data ?? {
-      data: expensesStatistics,
-      dataKey: "date",
-      series: [
-        { dataKey: "amountThisWeek", label: "This Week" },
-        { dataKey: "amountLastWeek", label: "Last Week" },
-      ],
-    };
 
   return (
     <>
@@ -25,7 +14,7 @@ function CardStatistic(props) {
             <select className="font-bold text-2xl ">
               <option>Weekly Comparison</option>
             </select>
-            <BarsDataset dataset={dataset} />
+            <BarsDataset dataset={data} />
           </>
         }
       />

@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import Card from "../Elements/Card";
 
 function CardRecentTransaction(props) {
-  const { data = [] } = props;
+  const { data } = props;
   const tabs = ["All", "Revenue", "Expense"];
   const [active, setActive] = useState("All");
 
   const filteredData =
-    active === "All" ? data : data?.filter((item) => item.type === active) || [];
+    active === "All" ? data : data.filter((item) => item.type === active);
 
   return (
     <>

@@ -4,9 +4,9 @@ import Icon from "../Elements/Icon";
 import CompositionExample from "../Elements/CompositionExample";
 
 function CardGoal(props) {
-  const { data = {} } = props;
-  const chartValue = data?.presentAmount && data?.targetAmount ? (data.presentAmount / data.targetAmount) * 100 : 0;
-console.log("data", data);
+  const { data } = props;
+  const chartValue = (data.presentAmount / data.targetAmount) * 100;
+
   return (
     <>
       <Card

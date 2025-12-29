@@ -2,7 +2,7 @@ import React from "react";
 import Card from "../Elements/Card";
 
 function CardUpcomingBill(props) {
-  const { data = [] } = props;
+  const { data } = props;
 
   return (
     <>
