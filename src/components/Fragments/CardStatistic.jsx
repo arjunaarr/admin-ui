@@ -1,6 +1,6 @@
 import React from "react";
 import Card from "../Elements/Card";
-import BarsDataset from "../Elements/BarsDataset";
+import BarsData from "../Elements/BarsDataset";
 
 function CardStatistic(props) {
   const { data } = props;
@@ -14,7 +14,7 @@ function CardStatistic(props) {
             <select className="font-bold text-2xl ">
               <option>Weekly Comparison</option>
             </select>
-            <BarsDataset dataset={data} />
+            <BarsData dataset={data} />
           </>
         }
       />
