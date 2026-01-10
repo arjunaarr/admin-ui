@@ -1,40 +1,41 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import AuthLayout from "../components/Layouts/AuthLayout";
 import FormSignIn from "../components/Fragments/FormSignIn";
 import { loginService } from "../services/authService";
 import { AuthContext } from "../context/authContext";
+import AppSnackbar from "../components/Elements/AppSnackbar";
 
 function signIn() {
   const { login } = React.useContext(AuthContext);
-  const navigate = useNavigate();
+
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+
+  const handleCloseSnackbar = () => {
+    setSnackbar((prev) => ({ ...prev, open: false }));
+  };
 
   const handleLogin = async (email, password) => {
     try {
-      console.log("Mencoba login dengan:", email, password);
-      const response = await loginService(email, password);
-      console.log("Response API:", response);
-      
-      // Coba berbagai nama field yang mungkin
-      const token = response.token || response.accessToken || response.refreshToken;
-      console.log("Token yang digunakan:", token);
-      
-      if (token) {
-        login(token);
-        console.log("Login berhasil, navigasi ke dashboard");
-        navigate("/");
-      } else {
-        console.error("Token tidak ditemukan di response");
-        alert("Login gagal: Token tidak diterima");
-      }
+      const { refreshToken } = await loginService(email, password);
+
+      login(refreshToken);
     } catch (err) {
-      console.error("Error login:", err);
-      alert("Login gagal: " + (err.msg || err.message || "Unknown error"));
+      setSnackbar({ open: true, message: err.msg, severity: "error" });
     }
   };
   return (
     <AuthLayout>
       <FormSignIn onSubmit={handleLogin} />
+      <AppSnackbar
+        open={snackbar.open}
+        message={snackbar.message}
+        severity={snackbar.severity}
+        onClose={handleCloseSnackbar}
+      />
     </AuthLayout>
   );
 }
