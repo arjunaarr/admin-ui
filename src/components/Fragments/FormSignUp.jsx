@@ -1,8 +1,29 @@
 import React from "react";
 import LabeledInput from "../Elements/LabeledInput";
 import Button from "../Elements/Button";
+import AppSnackbar from "../Elements/AppSnackbar";
+import { useState } from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import { registerService } from "../../services/authService";
+
+const SignUpSchema = Yup.object().shape({
+  name: Yup.string().required("Nama wajib diisi"),
+  email: Yup.string().email("Email tidak valid").required("Email wajib diisi"),
+  password: Yup.string().required("Password wajib diisi"),
+});
 
 function FormSignUp() {
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
+
   return (
     <>
       {/* title start */}
@@ -12,47 +33,105 @@ function FormSignUp() {
       {/* title end */}
       {/* form start */}
       <div>
-        <form action="">
-          <div className="mb-6">
-            <LabeledInput
-              label="Name"
-              id="name"
-              type="text"
-              placeholder="Tanzir Rahman"
-              name="name"
-            />
-          </div>
-          <div className="mb-6">
-            <LabeledInput
-              label="Email Address"
-              id="email"
-              type="email"
-              placeholder="hello@example.com"
-              name="email"
-            />
-          </div>
-          <div className="mb-6">
-            <LabeledInput
-              label="Password"
-              id="password"
-              type="password"
-              placeholder="•••••••••"
-              name="password"
-            />
-          </div>
-          <div className="mb-6">
-            <p className="text-xs text-gray-03">
-              By continuing, you agree to our{" "}
-              <a href="#" className="text-primary">
-                terms of service
-              </a>
-              .
-            </p>
-          </div>
-          <div>
-            <Button>Sign up</Button>
-          </div>
-        </form>
+        <Formik
+          initialValues={{
+            name: "",
+            email: "",
+            password: "",
+          }}
+          validationSchema={SignUpSchema}
+          onSubmit={async (values, { setSubmitting }) => {
+            try {
+              const response = await registerService(values.name, values.email, values.password);
+              
+              setSnackbar({
+                open: true,
+                message: "Akun berhasil dibuat",
+                severity: "success",
+              });
+              console.log("Register berhasil:", response);
+            } catch (error) {
+              setSnackbar({
+                open: true,
+                message: error.msg || "Register gagal",
+                severity: "error",
+              });
+            } finally {
+              setSubmitting(false);
+            }
+          }}
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              <div className="mb-6">
+                <Field name="name">
+                  {({ field }) => (
+                    <LabeledInput
+                      {...field}
+                      id="name"
+                      type="text"
+                      label="Nama"
+                      placeholder="Tanzir Rahman"
+                    />
+                  )}
+                </Field>
+                <ErrorMessage
+                  name="name"
+                  component="p"
+                  className="text-red-500 text-xs mt-1"
+                />
+              </div>
+              <div className="mb-6">
+                <Field name="email">
+                  {({ field }) => (
+                    <LabeledInput
+                      {...field}
+                      id="email"
+                      type="email"
+                      label="Email Address"
+                      placeholder="hello@example.com"
+                    />
+                  )}
+                </Field>
+                <ErrorMessage
+                  name="email"
+                  component="p"
+                  className="text-red-500 text-xs mt-1"
+                />
+              </div>
+              <div className="mb-6">
+                <Field name="password">
+                  {({ field }) => (
+                    <LabeledInput
+                      {...field}
+                      id="password"
+                      type="password"
+                      label="Password"
+                      placeholder="•••••••••"
+                    />
+                  )}
+                </Field>
+                <ErrorMessage
+                  name="password"
+                  component="p"
+                  className="text-red-500 text-xs mt-1"
+                />
+              </div>
+              <div className="mb-6">
+                <p className="text-xs text-gray-03">
+                  By continuing, you agree to our{" "}
+                  <a href="#" className="text-primary">
+                    terms of service
+                  </a>
+                  .
+                </p>
+              </div>
+              <div>
+                <Button>{isSubmitting ? "Loading..." : "Sign up"}</Button>
+              </div>
+            </Form>
+          )}
+        </Formik>
       </div>
       {/* form end */}
       {/* teks start */}
@@ -120,6 +199,12 @@ function FormSignUp() {
           <link to="/register" className="text-primary text-sm font-bold"/>
       </div>
       {/* link end */}
+      <AppSnackbar
+        open={snackbar.open}
+        message={snackbar.message}
+        severity={snackbar.severity}
+        onClose={handleCloseSnackbar}
+      />
     </>
   );
 }
