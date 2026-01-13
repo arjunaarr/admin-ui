@@ -1,29 +1,19 @@
 import React from "react";
 import LabeledInput from "../Elements/LabeledInput";
 import Button from "../Elements/Button";
-import AppSnackbar from "../Elements/AppSnackbar";
-import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { registerService } from "../../services/authService";
 
 const SignUpSchema = Yup.object().shape({
   name: Yup.string().required("Nama wajib diisi"),
   email: Yup.string().email("Email tidak valid").required("Email wajib diisi"),
-  password: Yup.string().required("Password wajib diisi"),
+  password: Yup.string()
+    .min(6, "Password minimal 6 karakter")
+    .required("Password wajib diisi"),
 });
 
-function FormSignUp() {
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    severity: "success",
-  });
-
-  const handleCloseSnackbar = () => {
-    setSnackbar({ ...snackbar, open: false });
-  };
-
+function FormSignUp({ onSubmit }) {
   return (
     <>
       {/* title start */}
@@ -42,20 +32,7 @@ function FormSignUp() {
           validationSchema={SignUpSchema}
           onSubmit={async (values, { setSubmitting }) => {
             try {
-              const response = await registerService(values.name, values.email, values.password);
-              
-              setSnackbar({
-                open: true,
-                message: "Akun berhasil dibuat",
-                severity: "success",
-              });
-              console.log("Register berhasil:", response);
-            } catch (error) {
-              setSnackbar({
-                open: true,
-                message: error.msg || "Register gagal",
-                severity: "error",
-              });
+              await onSubmit(values.name, values.email, values.password);
             } finally {
               setSubmitting(false);
             }
@@ -68,9 +45,9 @@ function FormSignUp() {
                   {({ field }) => (
                     <LabeledInput
                       {...field}
+                      label="Name"
                       id="name"
                       type="text"
-                      label="Nama"
                       placeholder="Tanzir Rahman"
                     />
                   )}
@@ -86,9 +63,9 @@ function FormSignUp() {
                   {({ field }) => (
                     <LabeledInput
                       {...field}
+                      label="Email Address"
                       id="email"
                       type="email"
-                      label="Email Address"
                       placeholder="hello@example.com"
                     />
                   )}
@@ -104,9 +81,9 @@ function FormSignUp() {
                   {({ field }) => (
                     <LabeledInput
                       {...field}
+                      label="Password"
                       id="password"
                       type="password"
-                      label="Password"
                       placeholder="•••••••••"
                     />
                   )}
@@ -127,7 +104,7 @@ function FormSignUp() {
                 </p>
               </div>
               <div>
-                <Button>{isSubmitting ? "Loading..." : "Sign up"}</Button>
+                <Button>{isSubmitting ? "Loading.." : "Sign up"}</Button>
               </div>
             </Form>
           )}
@@ -194,17 +171,15 @@ function FormSignUp() {
       </div>
       {/* sign up with google end */}
       {/* link start */}
-      <div className="flex justify-center text-sm mt text-gray-01">
-          Already have an account?&nbsp;
-          <link to="/register" className="text-primary text-sm font-bold"/>
+      <div className="flex justify-center">
+        <p className="mt-6 text-sm text-gray-03">
+          Already have an account?{" "}
+          <><Link to="/login" className="text-primary font-bold">
+            Sign in here
+          </Link></>
+        </p>
       </div>
       {/* link end */}
-      <AppSnackbar
-        open={snackbar.open}
-        message={snackbar.message}
-        severity={snackbar.severity}
-        onClose={handleCloseSnackbar}
-      />
     </>
   );
 }
